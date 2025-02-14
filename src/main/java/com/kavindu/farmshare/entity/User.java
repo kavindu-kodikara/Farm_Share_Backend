@@ -26,10 +26,10 @@ public class User implements Serializable {
     @Column(name = "password",nullable = false)
     private String password;
 
-    @Column(name = "dob",nullable = false)
+    @Column(name = "registered",nullable = false)
     private Date date;
 
-    @Column(name = "profile_pic",nullable = false)
+    @Column(name = "profile_pic")
     private String profilePic;
 
     @ManyToOne

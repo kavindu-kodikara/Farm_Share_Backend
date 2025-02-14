@@ -16,6 +16,9 @@ public class CropType implements Serializable {
     @Column(name = "name",nullable = false)
     private String name;
 
+    @Column(name = "price",nullable = false)
+    private double price;
+
     public CropType() {
     }
 
@@ -25,6 +28,14 @@ public class CropType implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public String getName() {

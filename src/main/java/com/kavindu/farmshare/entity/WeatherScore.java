@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "wether_score")
-public class WetherScore implements Serializable {
+public class WeatherScore implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class WetherScore implements Serializable {
     @JoinColumn(name = "farm_id",nullable = false)
     private Farm farm;
 
-    public WetherScore() {
+    public WeatherScore() {
     }
 
     public int getId() {
