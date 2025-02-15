@@ -1,6 +1,8 @@
 package com.kavindu.farmshare.controller;
 
 import com.kavindu.farmshare.dto.AddFarmDto;
+import com.kavindu.farmshare.dto.ImageDto;
+import com.kavindu.farmshare.dto.RequestDto;
 import com.kavindu.farmshare.dto.ResponseDto;
 import com.kavindu.farmshare.service.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,8 @@ public class FarmController {
                 && !addFarmDto.getAnalysisFile().isBlank()
                 && !addFarmDto.getSoilReportFile().isBlank()
                 && !addFarmDto.getLat().isBlank()
-                && !addFarmDto.getLng().isBlank()){
+                && !addFarmDto.getLng().isBlank()
+                && !addFarmDto.getUserId().isBlank()){
 
             responseDto = farmService.addFarm(addFarmDto);
 
@@ -44,9 +47,35 @@ public class FarmController {
             responseDto.setMessage("Something went wrong please try again");
         }
 
-        responseDto.setSuccess(true);
+
+        System.out.println(responseDto.isSuccess());
+        return responseDto;
+
+    }
+
+    @PostMapping(value = "/save-images")
+    public ResponseDto saveImages(@RequestBody ImageDto imageDto){
+
+        ResponseDto responseDto = new ResponseDto();
+
+        if (imageDto.getImageArray() != null && imageDto.getFarmId() != 0){
+
+            responseDto = farmService.saveImages(imageDto);
+
+        }else {
+            responseDto.setMessage("Something went wrong");
+        }
 
         return responseDto;
+
+    }
+
+    @PostMapping(value = "/load-my-farms")
+    public ResponseDto loadMyFarms(@RequestBody RequestDto requestDto){
+
+        farmService.updateStockPrice();
+
+        return farmService.loadMyFarms(requestDto);
 
     }
 

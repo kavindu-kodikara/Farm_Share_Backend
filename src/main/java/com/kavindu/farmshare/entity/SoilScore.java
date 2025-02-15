@@ -15,7 +15,7 @@ public class SoilScore implements Serializable {
     private int id;
 
     @Column(name = "score",nullable = false)
-    private int score;
+    private double score;
 
     @Column(name = "date",nullable = false)
     private Date date;
@@ -35,11 +35,12 @@ public class SoilScore implements Serializable {
         this.id = id;
     }
 
-    public int getScore() {
+
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
     }
 
