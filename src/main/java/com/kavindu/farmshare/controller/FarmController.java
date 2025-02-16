@@ -1,9 +1,6 @@
 package com.kavindu.farmshare.controller;
 
-import com.kavindu.farmshare.dto.AddFarmDto;
-import com.kavindu.farmshare.dto.ImageDto;
-import com.kavindu.farmshare.dto.RequestDto;
-import com.kavindu.farmshare.dto.ResponseDto;
+import com.kavindu.farmshare.dto.*;
 import com.kavindu.farmshare.service.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -74,9 +71,49 @@ public class FarmController {
     public ResponseDto loadMyFarms(@RequestBody RequestDto requestDto){
 
         farmService.updateStockPrice();
+//        farmService.forceUpdateStockPrice();
 
         return farmService.loadMyFarms(requestDto);
 
+    }
+
+    @PostMapping(value = "/update-soil-report")
+    public ResponseDto updateSoilReport(@RequestBody SoilReportDto soilReportDto){
+        ResponseDto responseDto = new ResponseDto();
+
+        responseDto = farmService.updateSoilReport(soilReportDto);
+
+        if (responseDto.isSuccess()){
+            farmService.forceUpdateStockPrice();
+        }
+
+        return responseDto;
+    }
+
+    @PostMapping(value = "/release-stock")
+    public ResponseDto releaseStock(@RequestBody RequestDto requestDto){
+
+        return farmService.releaseStock(requestDto);
+    }
+
+    @PostMapping(value = "/update-farm-status")
+    public ResponseDto updateFarmStatus(@RequestBody RequestDto requestDto){
+        return farmService.updateFarmStatus(requestDto);
+    }
+
+    @PostMapping(value = "/season-start")
+    public ResponseDto farmSeasonStarts(@RequestBody SeasonStartDto seasonStartDto){
+        ResponseDto responseDto = new ResponseDto();
+
+        System.out.println(seasonStartDto.getStartDate());
+
+        if(!seasonStartDto.getStartDate().isEmpty() && !seasonStartDto.getEndDate().isEmpty()){
+            responseDto = farmService.farmSeasonStart(seasonStartDto);
+        }else{
+            responseDto.setMessage("Something went wrong try again");
+        }
+
+        return responseDto;
     }
 
 }

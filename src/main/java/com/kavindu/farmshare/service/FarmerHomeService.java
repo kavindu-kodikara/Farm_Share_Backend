@@ -1,18 +1,19 @@
 package com.kavindu.farmshare.service;
 
-import com.kavindu.farmshare.dto.FarmerHomeDto;
-import com.kavindu.farmshare.dto.NameIdDto;
-import com.kavindu.farmshare.dto.RequestDto;
+import com.kavindu.farmshare.dto.*;
 import com.kavindu.farmshare.entity.Farm;
+import com.kavindu.farmshare.entity.StockAllocation;
 import com.kavindu.farmshare.entity.StockPrice;
 import com.kavindu.farmshare.entity.User;
 import com.kavindu.farmshare.repo.FarmRepo;
+import com.kavindu.farmshare.repo.StockAllocationRepo;
 import com.kavindu.farmshare.repo.StockPriceRepo;
 import com.kavindu.farmshare.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class FarmerHomeService {
 
     @Autowired
     StockPriceRepo stockPriceRepo;
+
+    @Autowired
+    StockAllocationRepo stockAllocationRepo;
 
     public FarmerHomeDto loadHome(RequestDto requestDto){
 
@@ -67,6 +71,43 @@ public class FarmerHomeService {
         farmerHomeDto.setRelesedStock(farm.getReleasedStock());
         farmerHomeDto.setStockProgress(farm.getStockProgress());
         farmerHomeDto.setExpectIncome(farm.getTotStock() * stockPrice.getPrice());
+        farmerHomeDto.setFarmId(farm.getId());
+        farmerHomeDto.setFarmStatus(farm.getFarmStatus().getName());
+
+        LocalDate today = LocalDate.now();
+
+        //load chart data
+        ArrayList<ChartEntruDto> chartEntryList = new ArrayList<>();
+
+        for (int i = 6; i >= 0; i-- ){
+            LocalDate date = today.minusDays(i);
+            StockPrice stockPrice1 = stockPriceRepo.findByFarmAndDate(farm,date);
+            double price = stockPrice1 != null ? stockPrice1.getPrice() : 0;
+
+            ChartEntruDto chartEntruDto = new ChartEntruDto(date.getDayOfMonth(),price);
+            chartEntryList.add(chartEntruDto);
+        }
+
+        farmerHomeDto.setChartEntryList(chartEntryList);
+        farmerHomeDto.setPriceDrop(chartEntryList.get(6).getValue() <= chartEntryList.get(5).getValue());
+
+        //load stock allocation
+        List<StockAllocationTableItemDto> tableItemList = new ArrayList<>();
+
+        List<StockAllocation> stockAllocations = stockAllocationRepo.findAllByFarm(farm);
+
+        for (StockAllocation stockAllocation : stockAllocations){
+            StockAllocationTableItemDto stockTable = new StockAllocationTableItemDto();
+            stockTable.setProfileUrl(stockAllocation.getUser().getProfilePic());
+            stockTable.setName(stockAllocation.getUser().getFname()+" "+stockAllocation.getUser().getLname());
+            stockTable.setAmount(String.valueOf(stockAllocation.getCount() * stockPrice.getPrice()));
+            stockTable.setStock(String.valueOf(stockAllocation.getCount()));
+
+            tableItemList.add(stockTable);
+        }
+
+        farmerHomeDto.setInvestorsCount(String.valueOf(tableItemList.size())+" Total");
+        farmerHomeDto.setTableItemList(tableItemList);
 
         return farmerHomeDto;
     }

@@ -28,4 +28,17 @@ public class FarmerHomeController {
 
     }
 
+    @PostMapping(value = "/load-home-farm")
+    public FarmerHomeDto loadHomeFarm(@RequestBody RequestDto requestDto){
+
+        FarmerHomeDto farmerHomeDto = new FarmerHomeDto();
+
+        farmerHomeDto = farmerHomeService.loadHomeData(requestDto);
+
+        return farmerHomeDto;
+
+    }
+
+
+
 }

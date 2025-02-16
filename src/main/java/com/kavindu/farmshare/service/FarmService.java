@@ -9,6 +9,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -64,6 +66,9 @@ public class FarmService {
 
     @Autowired
     PhotosRepo photosRepo;
+
+    @Autowired
+    SeasonRepo seasonRepo;
 
 
     public ResponseDto addFarm(AddFarmDto addFarmDto){
@@ -239,7 +244,7 @@ public class FarmService {
                  farmItem.setFarmName(farm.getFarmName());
                  farmItem.setStockCount(String.valueOf(farm.getStockProgress()));
 
-                 if (farm.getRiskScore() > 110.0){
+                 if (farm.getRiskScore() > 120.0){
                      farmItem.setIsAtRisk("true");
                  }else{
                      farmItem.setIsAtRisk("false");
@@ -253,6 +258,94 @@ public class FarmService {
         }else {
             responseDto.setMessage("Please try again later");
         }
+
+        return responseDto;
+    }
+
+    public ResponseDto updateSoilReport(SoilReportDto soilReportDto){
+        ResponseDto responseDto = new ResponseDto();
+
+        Farm farm = farmRepo.findById(soilReportDto.getFarmId()).get();
+
+        SoilDoc soilDoc = soilDocRepo.findByFarm(farm);
+
+        soilDoc.setPh(soilReportDto.getPh());
+        soilDoc.setMoistureContent(soilReportDto.getMoisture());
+        soilDoc.setOrganicMatter(soilReportDto.getOrganic());
+        soilDoc.setNutrientLevel(soilReportDto.getNutrient());
+        soilDoc.setDocument(soilReportDto.getDocument());
+        soilDoc.setDate(new Date());
+
+        soilDocRepo.save(soilDoc);
+
+        responseDto.setSuccess(true);
+
+        return responseDto;
+    }
+
+    public ResponseDto releaseStock(RequestDto requestDto){
+        ResponseDto responseDto = new ResponseDto();
+
+        Farm farm = farmRepo.findById(requestDto.getId()).get();
+
+        if (farm.getTotStock() >= (farm.getReleasedStock() + Integer.parseInt(requestDto.getValue()))){
+            farm.setReleasedStock(farm.getReleasedStock() + Integer.parseInt(requestDto.getValue()));
+            responseDto.setSuccess(true);
+        }else {
+            responseDto.setMessage("Invalid stock amount");
+        }
+
+
+
+        return responseDto;
+    }
+
+    public ResponseDto updateFarmStatus(RequestDto requestDto){
+        ResponseDto responseDto = new ResponseDto();
+
+        FarmStatus farmStatus = farmStatusRepo.findByName(requestDto.getValue());
+        Farm farm = farmRepo.findById(requestDto.getId()).get();
+        farm.setFarmStatus(farmStatus);
+        farmRepo.save(farm);
+
+        responseDto.setSuccess(true);
+        responseDto.setMessage("Status updated");
+
+        return responseDto;
+    }
+
+    public ResponseDto farmSeasonStart(SeasonStartDto seasonStartDto){
+        ResponseDto responseDto = new ResponseDto();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date startDate;
+        Date endDate;
+        try {
+
+             startDate = dateFormat.parse(seasonStartDto.getStartDate());
+             endDate = dateFormat.parse(seasonStartDto.getEndDate());
+
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        Farm farm = farmRepo.findById(seasonStartDto.getFarmId()).get();
+        Season season = seasonRepo.findByFarm(farm);
+        season = season == null ? new Season() : season;
+
+        season.setFarm(farm);
+        season.setStartDate(startDate);
+        season.setEndDate(endDate);
+        seasonRepo.save(season);
+
+        RequestDto requestDto = new RequestDto();
+        requestDto.setValue("Cultivating");
+        requestDto.setId(farm.getId());
+
+        updateFarmStatus(requestDto);
+
+        responseDto.setSuccess(true);
+        responseDto.setMessage("Season started");
 
         return responseDto;
     }
