@@ -116,4 +116,9 @@ public class FarmController {
         return responseDto;
     }
 
+    @PostMapping(value = "/load-risk-review")
+    public RiskReviewDto loadRiskReview(@RequestBody RequestDto requestDto){
+        return farmService.loadRiskReview(requestDto);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.kavindu.farmshare.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "stock_allocation")
@@ -14,6 +15,9 @@ public class StockAllocation implements Serializable {
 
     @Column(name = "count",nullable = false)
     private int count;
+
+    @Column(name = "date",nullable = false)
+    private Date date;
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
@@ -68,5 +72,13 @@ public class StockAllocation implements Serializable {
 
     public void setReturnType(ReturnType returnType) {
         this.returnType = returnType;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

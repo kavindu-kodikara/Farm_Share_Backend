@@ -350,6 +350,48 @@ public class FarmService {
         return responseDto;
     }
 
+    public RiskReviewDto loadRiskReview(RequestDto requestDto){
+
+        Farm farm = farmRepo.findById(requestDto.getId()).get();
+        SoilDoc soilDoc = soilDocRepo.findByFarm(farm);
+
+        LocalDate today = LocalDate.now();
+
+        //load weather chart data
+        ArrayList<ChartEntruDto> weatherChartEntryList = new ArrayList<>();
+        ArrayList<ChartEntruDto> soilChartEntryList = new ArrayList<>();
+
+        for (int i = 6; i >= 0; i-- ){
+            LocalDate date = today.minusDays(i);
+            WeatherScore weatherScore = weatherScoreRepo.findByFarmAndDate(farm,date);
+            double score = weatherScore != null ? weatherScore.getScore() : 0;
+
+            ChartEntruDto chartEntruDto = new ChartEntruDto(date.getDayOfMonth(),score);
+            weatherChartEntryList.add(chartEntruDto);
+        }
+
+        for (int i = 6; i >= 0; i-- ){
+            LocalDate date = today.minusDays(i);
+            SoilScore soilScore = soilScoreRepo.findBySoilDocAndDate(soilDoc,date);
+            double score = soilScore != null ? soilScore.getScore() : 0;
+
+            ChartEntruDto chartEntruDto = new ChartEntruDto(date.getDayOfMonth(),score);
+            soilChartEntryList.add(chartEntruDto);
+        }
+
+        RiskReviewDto riskReviewDto = new RiskReviewDto();
+
+        riskReviewDto.setRisk(farm.getRiskScore() > 120);
+        riskReviewDto.setRiskScore(String.valueOf(farm.getRiskScore()));
+        riskReviewDto.setSoilChartList(soilChartEntryList);
+        riskReviewDto.setWeatherChartList(weatherChartEntryList);
+        riskReviewDto.setSoilScoreDrop(soilChartEntryList.get(6).getValue() < soilChartEntryList.get(5).getValue());
+        riskReviewDto.setSoilScoreDrop(weatherChartEntryList.get(6).getValue() < weatherChartEntryList.get(5).getValue());
+
+        return riskReviewDto;
+
+    }
+
     @Async
     public void updateStockPrice(){
 

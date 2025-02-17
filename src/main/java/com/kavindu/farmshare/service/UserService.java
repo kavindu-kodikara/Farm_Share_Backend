@@ -96,6 +96,7 @@ public class UserService {
                     user.getDate(),"",
                     user.getUserType().getName(),
                     user.getActiveStatus().getName());
+            respUserDto.setProfilePic(user.getProfilePic() != null ? user.getProfilePic() : "");
 
             responseDto.setData(respUserDto);
             responseDto.setSuccess(true);
@@ -106,6 +107,35 @@ public class UserService {
         }
 
 
+
+        return responseDto;
+    }
+
+    public ResponseDto update(UserDto userDto){
+        ResponseDto responseDto = new ResponseDto();
+
+        User user = userRepo.findById(userDto.getId()).get();
+        user.setFname(userDto.getFname());
+        user.setLname(userDto.getLname());
+        user.setPassword(userDto.getPassword());
+        user.setProfilePic(userDto.getProfilePic());
+
+        User savedUser = userRepo.save(user);
+
+        UserDto responseUserDto = new UserDto(savedUser.getId(),savedUser.getMobile(),
+                savedUser.getFname(),
+                savedUser.getLname(),
+                savedUser.getPassword(),
+                savedUser.getDate(),
+                savedUser.getProfilePic(),
+                savedUser.getUserType().getName(),
+                savedUser.getActiveStatus().getName());
+
+
+        responseDto.setData(responseUserDto);
+
+        responseDto.setSuccess(true);
+        responseDto.setMessage("Account Updated");
 
         return responseDto;
     }

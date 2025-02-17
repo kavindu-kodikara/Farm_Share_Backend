@@ -73,6 +73,7 @@ public class FarmerHomeService {
         farmerHomeDto.setExpectIncome(farm.getTotStock() * stockPrice.getPrice());
         farmerHomeDto.setFarmId(farm.getId());
         farmerHomeDto.setFarmStatus(farm.getFarmStatus().getName());
+        farmerHomeDto.setSingleStockPrice(stockPrice.getPrice());
 
         LocalDate today = LocalDate.now();
 
@@ -89,7 +90,7 @@ public class FarmerHomeService {
         }
 
         farmerHomeDto.setChartEntryList(chartEntryList);
-        farmerHomeDto.setPriceDrop(chartEntryList.get(6).getValue() <= chartEntryList.get(5).getValue());
+        farmerHomeDto.setPriceDrop(chartEntryList.get(6).getValue() < chartEntryList.get(5).getValue());
 
         //load stock allocation
         List<StockAllocationTableItemDto> tableItemList = new ArrayList<>();

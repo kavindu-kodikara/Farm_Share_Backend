@@ -69,4 +69,30 @@ public class UserController {
         return responseDto;
     }
 
+    @PostMapping(value = "/update")
+    public ResponseDto update(@RequestBody UserDto userDto){
+
+        ResponseDto responseDto = new ResponseDto();
+
+        if (!userDto.getFname().isBlank()
+                && !userDto.getLname().isBlank()
+                && !userDto.getPassword().isBlank()
+                && !userDto.getRePassword().isBlank()){
+
+            if (!userDto.getPassword().equals(userDto.getRePassword())) {
+                responseDto.setMessage("Passwords do not match!");
+            }else {
+
+               responseDto = userService.update(userDto);
+
+            }
+
+        }else {
+            responseDto.setMessage("Please try again");
+        }
+
+
+        return responseDto;
+    }
+
 }
