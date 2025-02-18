@@ -56,7 +56,7 @@ public class InvestorHomeService {
 
         //search hot list
         ArrayList<HotItemBean> hotFarmList = new ArrayList<>();
-        List<Farm> farmList = farmRepo.findAllByActiveStatus(activeStatus);
+        List<Farm> farmList = farmRepo.findFarmsByActiveStatusAndFarmStatus(activeStatus);
         List<FarmPercentage> farmPercentages = new ArrayList<>();
 
         for (Farm farm : farmList){

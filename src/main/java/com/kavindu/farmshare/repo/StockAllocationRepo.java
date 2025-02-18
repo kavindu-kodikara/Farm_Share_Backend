@@ -21,4 +21,6 @@ public interface StockAllocationRepo  extends JpaRepository<StockAllocation,Inte
     public List<Farm> findTopFarmsByStockCountAndStatus(@Param("activeStatus") ActiveStatus activeStatus, Pageable pageable);
 
     public List<StockAllocation> findAllByUser(User user);
+
+    public StockAllocation findTopByUserAndFarmOrderByDateDesc(User user,Farm farm);
 }
