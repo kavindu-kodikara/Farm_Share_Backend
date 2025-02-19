@@ -49,12 +49,17 @@ public class FarmerHomeService {
             chipArrayList.add(nameIdDto);
         }
 
-        RequestDto farmIdDto = new RequestDto(farmList.get(0).getId());
+        FarmerHomeDto farmerHomeDto = new FarmerHomeDto();
 
-        FarmerHomeDto farmerHomeDto = loadHomeData(farmIdDto);
+        if(!farmList.isEmpty()){
+            RequestDto farmIdDto = new RequestDto(farmList.get(0).getId());
 
-        farmerHomeDto.setChipArray(chipArrayList);
-        farmerHomeDto.setSuccess(true);
+             farmerHomeDto = loadHomeData(farmIdDto);
+
+            farmerHomeDto.setChipArray(chipArrayList);
+            farmerHomeDto.setSuccess(true);
+        }
+
         return farmerHomeDto;
     }
 

@@ -338,6 +338,11 @@ public class FarmService {
         season.setEndDate(endDate);
         seasonRepo.save(season);
 
+        LocalDate today = LocalDate.now();
+        StockPrice stockPrice = stockPriceRepo.findByFarmAndDate(farm,today);
+        stockPrice.setPrice(farm.getCropType().getPrice());
+        stockPriceRepo.save(stockPrice);
+
         RequestDto requestDto = new RequestDto();
         requestDto.setValue("Cultivating");
         requestDto.setId(farm.getId());

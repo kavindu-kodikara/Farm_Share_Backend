@@ -1,11 +1,7 @@
 package com.kavindu.farmshare.controller;
 
-import com.kavindu.farmshare.dto.InvestorHomeDto;
-import com.kavindu.farmshare.dto.RequestDto;
-import com.kavindu.farmshare.dto.SingleFarmDto;
-import com.kavindu.farmshare.service.FarmService;
-import com.kavindu.farmshare.service.InvestorHomeService;
-import com.kavindu.farmshare.service.SingleFarmService;
+import com.kavindu.farmshare.dto.*;
+import com.kavindu.farmshare.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +21,12 @@ public class InvestorController {
     @Autowired
     FarmService farmService;
 
+    @Autowired
+    SearchService searchService;
+
+    @Autowired
+    TransactionService transactionService;
+
     @PostMapping(value = "/load-home")
     public InvestorHomeDto loadHome(@RequestBody RequestDto requestDto){
 //        farmService.forceUpdateStockPrice();
@@ -35,6 +37,21 @@ public class InvestorController {
     @PostMapping(value = "/load-single-farm")
     public SingleFarmDto loadSingleFarm(@RequestBody RequestDto requestDto){
         return singleFarmService.loadSingleFarm(requestDto);
+    }
+
+    @PostMapping(value = "/load-search-farms")
+    public SearchDto loadSearchFarm(){
+        return searchService.loadSearchFarms();
+    }
+
+    @PostMapping(value = "/search-farms")
+    public SearchDto searchFarm(@RequestBody RequestDto requestDto){
+        return searchService.searchFarms(requestDto);
+    }
+
+    @PostMapping(value = "/load-transaction")
+    public TransactionDto loadTransaction(@RequestBody RequestDto requestDto){
+        return transactionService.loadTransaction(requestDto);
     }
 
 }

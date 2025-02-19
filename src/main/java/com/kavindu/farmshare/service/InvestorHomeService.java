@@ -66,8 +66,12 @@ public class InvestorHomeService {
             double yesterdayPrice = stPriceYesterday != null ? stPriceYesterday.getPrice() : 0;
 
             if(stPricetoday.getPrice() > yesterdayPrice){
+                double percentage = 0;
+                if (yesterdayPrice > 0){
+                    percentage =  Math.round((((stPricetoday.getPrice() - yesterdayPrice) / yesterdayPrice) * 100) * 100.0) / 100.0;
+                }
 
-                double percentage =  Math.round((((stPricetoday.getPrice() - yesterdayPrice) / yesterdayPrice) * 100) * 100.0) / 100.0;
+
                 farmPercentages.add(new FarmPercentage(farm, percentage));
             }
 

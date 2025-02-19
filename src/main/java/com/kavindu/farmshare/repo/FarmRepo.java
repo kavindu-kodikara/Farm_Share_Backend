@@ -21,4 +21,16 @@ public interface FarmRepo  extends JpaRepository<Farm,Integer> {
     public List<Farm> findFarmsByActiveStatusAndFarmStatus(
             @Param("activeStatus") ActiveStatus activeStatus
     );
+
+    @Query("SELECT f FROM Farm f WHERE f.activeStatus = :activeStatus " +
+            "AND f.farmStatus.id IN (2, 3, 4, 5) " +
+            "AND ((:farmName IS NULL OR :farmName = '' OR LOWER(f.farmName) LIKE LOWER(CONCAT('%', :farmName, '%'))) " +
+            "OR (:codeName IS NULL OR :codeName = '' OR LOWER(f.codeName) LIKE LOWER(CONCAT('%', :codeName, '%'))))")
+    List<Farm> findFarmsByFilters(
+            @Param("activeStatus") ActiveStatus activeStatus,
+            @Param("farmName") String farmName,
+            @Param("codeName") String codeName
+    );
+
+
 }

@@ -86,7 +86,12 @@ public class SingleFarmService {
         String avgPrice = "Rs. "+ new DecimalFormat("#,###").format(weekChartEntryList.get(6).getValue() * farm.getAvgIncome());
         singleFarmDto.setAvgIncome(avgPrice);
 
-        double percentage =  Math.round((((weekChartEntryList.get(6).getValue() - weekChartEntryList.get(5).getValue()) / weekChartEntryList.get(5).getValue()) * 100) * 100.0) / 100.0;
+        double percentage = 0;
+
+        if(weekChartEntryList.get(5).getValue() > 0){
+            percentage =  Math.round((((weekChartEntryList.get(6).getValue() - weekChartEntryList.get(5).getValue()) / weekChartEntryList.get(5).getValue()) * 100) * 100.0) / 100.0;
+        }
+
         double value = Math.round((weekChartEntryList.get(6).getValue() - weekChartEntryList.get(5).getValue()) * 100.0) / 100.0 ;
 
         singleFarmDto.setValuePercentage(String.valueOf(percentage)+"%");
@@ -118,7 +123,7 @@ public class SingleFarmService {
             monthChartEntryList.add(chartEntruDto);
         }
 
-        //load season chart
+        // Load season chart
         ArrayList<ChartEntruDto> seasonChartEntryList = new ArrayList<>();
         LocalDate seasonLocalDate = season.getStartDate().toInstant()
                 .atZone(ZoneId.systemDefault())
@@ -126,13 +131,18 @@ public class SingleFarmService {
 
         long daysBetweenSeason = ChronoUnit.DAYS.between(seasonLocalDate, today);
 
-        for (int i = 0; i <= daysBetweenSeason; i++) {
-            LocalDate date = seasonLocalDate.plusDays(i);
-            StockPrice stockPrice2 = stockPriceRepo.findByFarmAndDate(farm, date);
-            double price = (stockPrice2 != null) ? stockPrice2.getPrice() : 0;
+        if (daysBetweenSeason == 0) {
+            StockPrice stockPriceToday = stockPriceRepo.findByFarmAndDate(farm, today);
+            double price = (stockPriceToday != null) ? stockPriceToday.getPrice() : 0;
+            seasonChartEntryList.add(new ChartEntruDto(0, price));
+        } else {
+            for (int i = 0; i <= daysBetweenSeason; i++) {
+                LocalDate date = seasonLocalDate.plusDays(i);
+                StockPrice stockPrice2 = stockPriceRepo.findByFarmAndDate(farm, date);
+                double price = (stockPrice2 != null) ? stockPrice2.getPrice() : 0;
 
-            ChartEntruDto chartEntruDto = new ChartEntruDto(i, price);
-            seasonChartEntryList.add(chartEntruDto);
+                seasonChartEntryList.add(new ChartEntruDto(i, price));
+            }
         }
 
         for (ChartEntruDto chartEntruDto : monthChartEntryList){
@@ -172,6 +182,9 @@ public class SingleFarmService {
             singleFarmDto.setProfileImg(null);
         }
 
+        singleFarmDto.setStockReleased(farm.getReleasedStock() > 0);
+
+        System.out.println(singleFarmDto.isStockReleased());
 
         singleFarmDto.setSeasonChartData(seasonChartEntryList);
         singleFarmDto.setMonthChartData(monthChartEntryList);
