@@ -1,0 +1,110 @@
+@font-face {
+    font-family: "roboto";
+    src: url("/assets/Roboto-Regular.ttf");
+  }
+
+body {
+    background-color: #f8f9fa;
+    font-family: "roboto";
+    font-size: 14px;
+  }
+  .sidebar {
+    padding: 20px;
+    height: 100vh;
+    background-color: #ffffff;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .sidebar .nav-link {
+    color: #333;
+    font-weight: 500;
+  }
+  .sidebar .nav-link.active {
+    
+    background-color: #e9ecef;
+  }
+  .content {
+    padding: 20px;
+    padding-left: 30px;
+    background-color: #F2EDF3;
+  }
+  .table {
+    background-color: #ffffff;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+  }
+  .table th,
+  .table td {
+    border-bottom: 1px solid #dee2e6;
+    color: #333;
+    padding: 15px;
+  }
+  .table th {
+    color: rgb(46, 46, 46);
+  }
+  .table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  .badge {
+    padding: 6px 10px;
+    border-radius: 12px;
+  }
+  .btn-success {
+    background-color: #1ABB67;
+    border-color: #1ABB67;
+  }
+  .btn-success:hover {
+    background-color: #17a05a;
+    border-color: #17a05a;
+  }
+
+  .title{
+    font-weight: bold;
+    color: #3E4B5B;
+    font-size: 20px;
+  }
+
+  .sub-title{
+    color: #C3BDBD;
+    font-size: 13px;
+  }
+
+  .nav-button-checked{
+    background-color: #F3F4FD;
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .nav-button{
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .nav-button-checked:hover{
+    cursor: pointer;
+  }
+
+  .nav-button:hover{
+    background-color: #F3F4FD;
+    cursor: pointer;
+  }
+
+  .title-div{
+    font-size: 18px;
+    font-weight: bold;
+    color: #3E4B5B;
+  }
+
+  .item-bg{
+    background-color: white;
+    padding: 40px;
+    padding-top: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+  }
