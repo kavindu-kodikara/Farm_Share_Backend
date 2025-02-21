@@ -88,19 +88,24 @@ public class UserService {
         User user = userRepo.findByMobileAndPasswordAndUserType(userDto.getMobile(),userDto.getPassword(),userType);
 
         if (user != null){
+            if (user.getActiveStatus().getName().equals("Active")){
+                UserDto respUserDto = new UserDto(user.getId(), user.getMobile(),
+                        user.getFname(),
+                        user.getLname(),
+                        user.getPassword(),
+                        user.getDate(),"",
+                        user.getUserType().getName(),
+                        user.getActiveStatus().getName());
+                respUserDto.setProfilePic(user.getProfilePic() != null ? user.getProfilePic() : "");
 
-            UserDto respUserDto = new UserDto(user.getId(), user.getMobile(),
-                    user.getFname(),
-                    user.getLname(),
-                    user.getPassword(),
-                    user.getDate(),"",
-                    user.getUserType().getName(),
-                    user.getActiveStatus().getName());
-            respUserDto.setProfilePic(user.getProfilePic() != null ? user.getProfilePic() : "");
+                responseDto.setData(respUserDto);
+                responseDto.setSuccess(true);
+                responseDto.setMessage("Sign-in success");
+            }else{
+                responseDto.setMessage("You have been blocked");
+            }
 
-            responseDto.setData(respUserDto);
-            responseDto.setSuccess(true);
-            responseDto.setMessage("Sign-in success");
+
 
         }else {
             responseDto.setMessage("Check your mobile or password");
