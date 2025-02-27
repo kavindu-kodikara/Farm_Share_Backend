@@ -70,6 +70,8 @@ public class Farm implements Serializable {
     @JoinColumn(name = "documents_id",nullable = false)
     private Documents documents;
 
+    private String soilDocUrl;
+
     public Farm() {
     }
 
@@ -215,5 +217,13 @@ public class Farm implements Serializable {
 
     public void setDocuments(Documents documents) {
         this.documents = documents;
+    }
+
+    public String getSoilDocUrl() {
+        return soilDocUrl;
+    }
+
+    public void setSoilDocUrl(String soilDocUrl) {
+        this.soilDocUrl = soilDocUrl;
     }
 }

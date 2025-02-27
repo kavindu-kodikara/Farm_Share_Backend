@@ -62,6 +62,7 @@ public class SingleFarmService {
         singleFarmDto.setOwnerName(farm.getUser().getFname()+" "+farm.getUser().getLname());
         singleFarmDto.setSeasonMonths(new SimpleDateFormat("MMM").format(season.getStartDate()) +" - "+new SimpleDateFormat("MMM").format(season.getEndDate()));
         singleFarmDto.setOwnerDate("Since "+new SimpleDateFormat("yyyy").format(farm.getUser().getDate()));
+        singleFarmDto.setMobile(farm.getUser().getMobile());
 
         String landSize = String.valueOf(farm.getSize()) +" ha";
         singleFarmDto.setLandSize(landSize);

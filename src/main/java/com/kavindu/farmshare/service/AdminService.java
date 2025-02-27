@@ -1,16 +1,14 @@
 package com.kavindu.farmshare.service;
 
 import com.kavindu.farmshare.dto.*;
-import com.kavindu.farmshare.entity.ActiveStatus;
-import com.kavindu.farmshare.entity.Farm;
-import com.kavindu.farmshare.entity.User;
-import com.kavindu.farmshare.entity.UserType;
+import com.kavindu.farmshare.entity.*;
 import com.kavindu.farmshare.repo.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,6 +30,9 @@ public class AdminService {
     @Autowired
     UserTypeRepo userTypeRepo;
 
+    @Autowired
+    SoilDocRepo soilDocRepo;
+
 
     public ResponseDto signIn(HttpSession session, UserDto userDto){
         ResponseDto responseDto = new ResponseDto();
@@ -52,7 +53,16 @@ public class AdminService {
 
         ActiveStatus activeStatus = activeStatusRepo.findById(1).get();
 
-        adminFarmDto.setFarmList(farmRepo.findAllByActiveStatus(activeStatus));
+        List<Farm> searchFarmList = farmRepo.findAllByActiveStatus(activeStatus);
+        List<Farm> farmList = new ArrayList<>();
+
+        for (Farm farm : searchFarmList){
+            SoilDoc soilDoc = soilDocRepo.findByFarm(farm);
+            farm.setSoilDocUrl(soilDoc.getDocument());
+            farmList.add(farm);
+        }
+
+        adminFarmDto.setFarmList(farmList);
 
         adminFarmDto.setSuccess(true);
         return  adminFarmDto;
