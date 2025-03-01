@@ -196,7 +196,7 @@ public class InvestorHomeService {
             payoutItem.setReturnType(stockAllocation.getReturnType().getName());
             payoutItem.setTitle(stockAllocation.getFarm().getCodeName());
 
-            Season season = seasonRepo.findByFarm(stockAllocation.getFarm());
+            Season season = seasonRepo.findTopByFarm(stockAllocation.getFarm());
 
             SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy");
             String formattedDate = formatter.format(season.getEndDate());

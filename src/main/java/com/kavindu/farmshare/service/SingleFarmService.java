@@ -46,7 +46,7 @@ public class SingleFarmService {
 
         LocalDate today = LocalDate.now();
         Farm farm = farmRepo.findById(requestDto.getId()).get();
-        Season season = seasonRepo.findByFarm(farm);
+        Season season = seasonRepo.findTopByFarm(farm);
 
         String yield = new DecimalFormat("#,###").format(farm.getAvgIncome()) +" kg";
 

@@ -2,6 +2,7 @@ package com.kavindu.farmshare.repo;
 
 import com.kavindu.farmshare.entity.ActiveStatus;
 import com.kavindu.farmshare.entity.Farm;
+import com.kavindu.farmshare.entity.FarmStatus;
 import com.kavindu.farmshare.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -36,6 +37,8 @@ public interface FarmRepo  extends JpaRepository<Farm,Integer> {
 
     public List<Farm> findByActiveStatus(ActiveStatus activeStatus);
     public List<Farm> findByActiveStatusNot(ActiveStatus activeStatus);
+
+    public List<Farm> findAllByActiveStatusAndFarmStatus(ActiveStatus activeStatus , FarmStatus farmStatus);
 
 
 }

@@ -121,4 +121,16 @@ public class FarmController {
         return farmService.loadRiskReview(requestDto);
     }
 
+    @PostMapping(value = "/load-payment")
+    public ResponseDto loadPaymentData(@RequestBody RequestDto requestDto){
+        System.out.println(requestDto.getId());
+        return farmService.loadPaymentData(requestDto);
+    }
+
+    @PostMapping(value = "/make-payment")
+    public ResponseDto makePayment(@RequestBody RequestDto requestDto){
+        System.out.println(requestDto.getId());
+        return farmService.makePayment(requestDto);
+    }
+
 }

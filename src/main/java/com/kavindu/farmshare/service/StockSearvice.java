@@ -62,7 +62,7 @@ public class StockSearvice {
 
         Farm farm = farmRepo.findById(paymentDto.getFarmId()).get();
         User user = userRepo.findById(paymentDto.getUserId()).get();
-        Season season = seasonRepo.findByFarm(farm);
+        Season season = seasonRepo.findTopByFarm(farm);
         ReturnType returnType = returnTypeRepo.findByName(paymentDto.getReturnType());
 
         TransactionType transactionType = transactionTypeRepo.findById(2).get();

@@ -61,7 +61,7 @@ public class SearchService {
             investItemDto.setPrice(price);
             investItemDto.setId(String.valueOf(farm.getId()));
 
-            if(chartEntryList.get(6).getValue() < chartEntryList.get(5).getValue()){
+            if(chartEntryList.get(6).getValue() <= chartEntryList.get(5).getValue()){
                 investItemDto.setLost("true");
             }else{
                 investItemDto.setLost("false");

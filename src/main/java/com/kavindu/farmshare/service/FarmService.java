@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -69,6 +70,15 @@ public class FarmService {
 
     @Autowired
     SeasonRepo seasonRepo;
+
+    @Autowired
+    ReturnTypeRepo returnTypeRepo;
+
+    @Autowired
+    StockAllocationRepo stockAllocationRepo;
+
+    @Autowired
+    FarmPaymentRepo farmPaymentRepo;
 
 
     public ResponseDto addFarm(AddFarmDto addFarmDto){
@@ -330,7 +340,7 @@ public class FarmService {
         }
 
         Farm farm = farmRepo.findById(seasonStartDto.getFarmId()).get();
-        Season season = seasonRepo.findByFarm(farm);
+        Season season = seasonRepo.findTopByFarm(farm);
         season = season == null ? new Season() : season;
 
         season.setFarm(farm);
@@ -397,7 +407,54 @@ public class FarmService {
 
     }
 
-    @Async
+    public ResponseDto loadPaymentData(RequestDto requestDto){
+
+        ResponseDto responseDto = new ResponseDto();
+        Farm farm = farmRepo.findById(requestDto.getId()).get();
+        ReturnType returnType = returnTypeRepo.findById(1).get();
+
+        Integer stockCount = stockAllocationRepo.getTotalStockAllocationByFarmAndReturnType(farm,returnType);
+        LocalDate today = LocalDate.now();
+        StockPrice stockPrice = stockPriceRepo.findByFarmAndDate(farm,today);
+
+        if (stockCount != null){
+            String price = String.valueOf(stockCount * stockPrice.getPrice());
+            responseDto.setMessage(price);
+            responseDto.setSuccess(true);
+        }
+
+        System.out.println(responseDto.getMessage());
+        return responseDto;
+
+    }
+
+    public ResponseDto makePayment(RequestDto requestDto){
+
+        ResponseDto responseDto = new ResponseDto();
+        Farm farm = farmRepo.findById(requestDto.getId()).get();
+        ReturnType returnType = returnTypeRepo.findById(1).get();
+
+        Integer stockCount = stockAllocationRepo.getTotalStockAllocationByFarmAndReturnType(farm,returnType);
+        LocalDate today = LocalDate.now();
+        StockPrice stockPrice = stockPriceRepo.findByFarmAndDate(farm,today);
+
+        if (stockCount != null){
+            Season season = seasonRepo.findTopByFarm(farm);
+
+            FarmPayment farmPayment = new FarmPayment();
+            farmPayment.setPrice(stockCount * stockPrice.getPrice());
+            farmPayment.setSeason(season);
+
+            farmPaymentRepo.save(farmPayment);
+
+            responseDto.setSuccess(true);
+        }
+
+        return responseDto;
+
+    }
+
+
     public void updateStockPrice(){
 
         List<Farm> farmList = farmRepo.findFarmsWithoutStockPriceToday();
@@ -465,7 +522,7 @@ public class FarmService {
 
     }
 
-    @Async
+
     public void forceUpdateStockPrice(){
         List<Farm> farmList = farmRepo.findAll();
 

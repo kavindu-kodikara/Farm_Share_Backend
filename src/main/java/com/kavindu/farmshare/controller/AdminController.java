@@ -74,4 +74,19 @@ public class AdminController {
 
         return adminService.updateUserStatus(requestDto);
     }
+
+    @PostMapping(value = "/load-payments")
+    public AdminFarmDto loadPayments(){
+        AdminFarmDto adminFarmDto = new AdminFarmDto();
+
+        adminFarmDto = adminService.loadPayment();
+
+        return adminFarmDto;
+    }
+
+    @PostMapping(value = "/update-farm-payment")
+    public ResponseDto updatefarmPayment(@RequestBody RequestDto requestDto){
+
+        return adminService.updatefarmPayment(requestDto);
+    }
 }

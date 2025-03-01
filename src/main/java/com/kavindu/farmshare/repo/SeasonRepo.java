@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SeasonRepo  extends JpaRepository<Season,Integer> {
     public Season findByFarm(Farm farm);
+    public Season findTopByFarm(Farm farm);
 }
