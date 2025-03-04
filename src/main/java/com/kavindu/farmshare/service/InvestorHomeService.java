@@ -110,6 +110,8 @@ public class InvestorHomeService {
 
                 ChartEntruDto chartEntruDto = new ChartEntruDto(date.getDayOfMonth(),price);
                 chartEntryList.add(chartEntruDto);
+                System.out.println(farm.getCodeName());
+                System.out.println(date +" : "+price);
             }
 
             double percentage =  Math.round((((chartEntryList.get(6).getValue() - chartEntryList.get(5).getValue()) / chartEntryList.get(5).getValue()) * 100) * 100.0) / 100.0;
