@@ -40,6 +40,12 @@ FarmShare consists of **three user roles**:
 
 ---
 
+### Click the image below to watch the full walkthrough video
+[![Auction System Tutorial](images/Thumbnail.png)](https://youtu.be/avROTKHqMXM?si=d5k49O6MN60dAACg)
+</br></br></br></br></br>
+
+---
+
 ## Features Breakdown
 
 ### **Welcome Page**
